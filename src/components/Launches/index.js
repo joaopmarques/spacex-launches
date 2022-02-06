@@ -11,15 +11,6 @@ const Launches = (props) => {
   // Set state hooks
   const [launches, setLaunches] = useState();
 
-  // Determine whether we're looking forwards or backwards
-  const timeframeQuery = () => {
-    if (props.isFutureLaunch) {
-      return query.futureLaunchesQuery;
-    } else {
-      return query.pastLaunchesQuery;
-    }
-  }
-
   // Data and state setting logic
   const grabData = (dataType, timeframe) => {
     api.fetchDataPOST(dataType, timeframe)
@@ -31,8 +22,40 @@ const Launches = (props) => {
 
   // Deal with side effects and refresh data
   useEffect(() => {
+    // Determine whether we're looking forwards or backwards
+    const timeframeQuery = () => {
+      if (props.isFutureLaunch) {
+        return query.futureLaunchesQuery;
+      } else {
+        return query.pastLaunchesQuery;
+      }
+    }
+
     grabData('launches', timeframeQuery());
-  }, []);
+  }, [props.isFutureLaunch]);
+
+  // Parse launch data and filter
+  const ParsedLaunchData = () => {
+    const filteredData = () => {
+      let tempData = launches.data.docs.filter(item => {
+        if (item.success && props.showSuccesses) return true;
+        if (!item.success && props.showFailures) return true;
+      });
+
+      return tempData;
+    }
+    return (
+      filteredData().map((mission, idx) => (
+        idx < props.launchCap && (
+          <LaunchArticle
+            key={mission.name}
+            mission={mission}
+            isFutureLaunch={props.isFutureLaunch}
+          />
+        )
+      ))
+    );
+  };
 
   // If there's launch info, display it
   if (launches) {
@@ -41,12 +64,8 @@ const Launches = (props) => {
         <h2 className="p-3 text-lg font-bold bg-slate-50 rounded-md shadow-sm">
           {props.isFutureLaunch ? '🧑‍🚀 Upcoming launches' : '🚀 Past launches'}
         </h2>
-        <div className="">
-          {launches.data.docs.map((mission, idx) => (
-            idx < props.launchCap && (
-              <LaunchArticle key={mission.name} mission={mission} isFutureLaunch={props.isFutureLaunch} />
-            )
-          ))}
+        <div>
+          <ParsedLaunchData />
         </div>
       </section>
     );

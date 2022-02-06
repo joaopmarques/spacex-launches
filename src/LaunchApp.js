@@ -6,13 +6,16 @@ import InfoVisibility from "./components/InfoVisibility";
 
 // Import utilities
 import * as query from "./utils/query";
-import * as styles from "./utils/defaultStyles";
 
 function App() {
 
   // State management
   const [scrollNoticeVisibility, setScrollNoticeVisibility] = useState(true);
   const [launchCap, setLaunchCap] = useState(4);
+  const [filterShowFuture, setFilterShowFuture] = useState(true);
+  const [filterShowPast, setFilterShowPast] = useState(true);
+  const [filterShowSuccessful, setFilterShowSuccessful] = useState(true);
+  const [filterShowFailed, setFilterShowFailed] = useState(true);
 
   // Set a ref to this container
   const sectionRef = useRef();
@@ -36,21 +39,30 @@ function App() {
       }
     }
 
+    // Add and cleanup scroll event listeners
     curRef.addEventListener('scroll', handleScroll);
     return () => {
       curRef.removeEventListener('scroll', handleScroll)
     };
   }, [launchCap]);
 
-  const [filterShowFuture, setFilterShowFuture] = useState(true);
-  const [filterShowPast, setFilterShowPast] = useState(true);
-
-  const handleFilter = (timePeriod) => {
-    if (timePeriod === 'future') {
-      setFilterShowFuture(!filterShowFuture);
-    }
-    if (timePeriod === 'past') {
-      setFilterShowPast(!filterShowPast);
+  // Handle filter button input logic
+  const handleFilter = (expToEval) => {
+    switch (expToEval) {
+      case 'future':
+        setFilterShowFuture(!filterShowFuture);
+        break;
+      case 'past':
+        setFilterShowPast(!filterShowPast);
+        break;
+      case 'successful':
+        setFilterShowSuccessful(!filterShowSuccessful);
+        break;
+      case 'failed':
+        setFilterShowFailed(!filterShowFailed);
+        break;
+      default:
+        break;
     }
   };
 
@@ -68,25 +80,46 @@ function App() {
       <div className="w-screen flex flex-nowrap p-5 bg-sky-100 border-b border-sky-200">
         <div className="container mx-auto">
           <p className="block mb-2 text-md mr-5 font-bold text-sky-700">Filters</p>
-          <div className="flex flex-row align-baseline">
-            <span className="text-sm mr-5 text-sky-700">⏳Timeframe</span>
-            <div className="flex overflow-hidden rounded-full">
-              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
-              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+          <div className="flex flex-col divide-y divide-sky-200">
+            <div className="flex flex-row align-middle py-2">
+              <span className="leading-8 shrink min-w-[25%] text-sm mr-5 text-sky-700">⏳ Timeframe</span>
+              <div className="grow flex overflow-hidden rounded-full">
+                <LaunchFilter
+                  className={!filterShowPast && 'bg-white text-sky-500 hover:bg-sky-200 active:bg-sky-300'}
+                  filterType={filterShowPast}
+                  handleFilter={handleFilter}
+                  expression={'past'}
+                />
+                <LaunchFilter
+                  className={`border-l border-sky-600 ${!filterShowFuture && 'bg-white text-sky-500 hover:bg-sky-200 active:bg-sky-300'}`}
+                  filterType={filterShowFuture}
+                  handleFilter={handleFilter}
+                  expression={'future'}
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row align-baseline">
-            <span className="text-sm mr-5 text-sky-700">⏳Time Period</span>
-            <div className="flex overflow-hidden rounded-full">
-              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
-              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+            <div className="flex flex-row align-middle py-2">
+              <span className="leading-8 shrink min-w-[25%] text-sm mr-5 text-sky-700">💪 Status</span>
+              <div className="grow flex overflow-hidden rounded-full">
+                <LaunchFilter
+                  className={!filterShowSuccessful && 'bg-white text-sky-500 hover:bg-sky-200 active:bg-sky-300'}
+                  filterType={filterShowSuccessful}
+                  handleFilter={handleFilter}
+                  expression={'successful'}
+                />
+                <LaunchFilter
+                  className={`border-l border-sky-600 ${!filterShowFailed && 'bg-white text-sky-500 hover:bg-sky-200 active:bg-sky-300'}`}
+                  filterType={filterShowFailed}
+                  handleFilter={handleFilter}
+                  expression={'failed'}
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row align-baseline">
-            <span className="text-sm mr-5 text-sky-700">⏳Time Period</span>
-            <div className="flex overflow-hidden rounded-full">
-              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
-              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+            <div className="flex flex-row align-middle py-2">
+              <span className="leading-8 shrink min-w-[25%] text-sm mr-5 text-sky-700">📆 Date Interval</span>
+              <div className="grow flex overflow-hidden rounded-full">
+                calendar goes here
+              </div>
             </div>
           </div>
         </div>
@@ -94,10 +127,20 @@ function App() {
 
       <div ref={sectionRef} className="h-100 overflow-x-hidden overflow-scroll container bg-slate-100 mx-auto mb-auto flex flex-col md:flex-row flex-auto flex-grow">
         {filterShowFuture && (
-          <Launches launchCap={launchCap} isFutureLaunch={true} />
+          <Launches
+            launchCap={launchCap}
+            isFutureLaunch={true}
+            showSuccesses={filterShowSuccessful}
+            showFailures={filterShowFailed}
+          />
         )}
         {filterShowPast && (
-          <Launches launchCap={launchCap} isFutureLaunch={false} />
+          <Launches
+            launchCap={launchCap}
+            isFutureLaunch={false}
+            showSuccesses={filterShowSuccessful}
+            showFailures={filterShowFailed}
+          />
         )}
         {!filterShowFuture && !filterShowPast && (
           <div className="block grow p-10">

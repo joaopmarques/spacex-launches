@@ -12,9 +12,9 @@ const InfoVisibility = (props) => {
   };
 
   return (
-    <div className="mx-auto bg-sky-50 border-b border-sky-200 p-5 w-screen">
+    <div className="mx-auto bg-sky-50 border-b border-sky-200 w-screen">
       {infoVisibility && (
-        <section className="container mx-auto relative">
+        <section className="container mx-auto relative my-5">
           <p className="text-sky-900">
             <strong className="mb-2 text-lg block">What's this?</strong>
             This is a simple way to check if your flight to Mars is currently on schedule.<br></br>
