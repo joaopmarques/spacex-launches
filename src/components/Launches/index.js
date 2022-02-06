@@ -39,7 +39,7 @@ const Launches = (props) => {
   // If there's launch info, display it
   if (launches) {
     return (
-      <section className={`basis-full h-100 flex flex-col p-5 ${!props.future && 'bg-slate-200 border-l border-slate-300'}`}>
+      <section className={`basis-full h-max flex flex-col p-5 ${!props.future && 'bg-slate-200 border-l border-slate-300'}`}>
         <h2 className="p-3 text-lg font-bold bg-slate-50 rounded-md shadow-sm">
           {props.future ? '🧑‍🚀 Upcoming launches' : '🚀 Past launches'}
         </h2>
