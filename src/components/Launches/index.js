@@ -24,15 +24,16 @@ const Launches = (props) => {
   useEffect(() => {
     // Determine whether we're looking forwards or backwards
     const timeframeQuery = () => {
-      if (props.isFutureLaunch) {
-        return query.futureLaunchesQuery;
+      const { isFutureLaunch, startDate } = props;
+      if (isFutureLaunch) {
+        return query.futureLaunchesQuery(startDate);
       } else {
-        return query.pastLaunchesQuery;
+        return query.pastLaunchesQuery(startDate);
       }
     }
 
     grabData('launches', timeframeQuery());
-  }, [props.isFutureLaunch]);
+  }, [props]);
 
   // Parse launch data and filter
   const ParsedLaunchData = () => {

@@ -16,21 +16,24 @@ function App() {
   const [filterShowPast, setFilterShowPast] = useState(true);
   const [filterShowSuccessful, setFilterShowSuccessful] = useState(true);
   const [filterShowFailed, setFilterShowFailed] = useState(true);
+  const [filterStartDate, setFilterStartDate] = useState(new Date());
 
   // Set a ref to this container
   const sectionRef = useRef();
+  const datepickerRef = useRef();
 
   // Deal with side effects
   useEffect(() => {
-    // Assign ref to constant to prevent cleanup mishaps
-    const curRef = sectionRef.current;
+    // Assign refs to constant to prevent cleanup mishaps
+    const curSectionRef = sectionRef.current;
+    const curDatepickerRef = datepickerRef.current;
 
     // Scrolling detection logic
     const handleScroll = () => {
       // Stop making requests if the limit has changed
       if (launchCap < query.QUERY_LIMIT) {
-        if (curRef) {
-          const { scrollTop, scrollHeight, clientHeight } = curRef;
+        if (curSectionRef) {
+          const { scrollTop, scrollHeight, clientHeight } = curSectionRef;
           if (scrollHeight - scrollTop === clientHeight) {
             setLaunchCap(launchCap + 2);
             setTimeout(() => setScrollNoticeVisibility(false), 3000);
@@ -39,10 +42,19 @@ function App() {
       }
     }
 
-    // Add and cleanup scroll event listeners
-    curRef.addEventListener('scroll', handleScroll);
+    // Click detection logic
+    const handleClick = () => {
+      if (curDatepickerRef) {
+        setFilterStartDate(curDatepickerRef.value);
+      }
+    }
+
+    // Add and cleanup scroll / click event listeners
+    curSectionRef.addEventListener('scroll', handleScroll);
+    curDatepickerRef.addEventListener('change', handleClick);
     return () => {
-      curRef.removeEventListener('scroll', handleScroll)
+      curSectionRef.removeEventListener('scroll', handleScroll)
+      curDatepickerRef.addEventListener('change', handleClick);
     };
   }, [launchCap]);
 
@@ -116,9 +128,13 @@ function App() {
               </div>
             </div>
             <div className="flex flex-row align-middle py-2">
-              <span className="leading-8 shrink min-w-[25%] text-sm mr-5 text-sky-700">📆 Date Interval</span>
-              <div className="grow flex overflow-hidden rounded-full">
-                calendar goes here
+              <span className="leading-8 shrink min-w-[25%] text-sm mr-5 text-sky-700">📆 Launches From</span>
+              <div className="grow flex">
+                <input
+                  className="block w-full px-5 rounded-full focus:ring-2 ring-yellow-400"
+                  type="date"
+                  ref={datepickerRef}
+                ></input>
               </div>
             </div>
           </div>
@@ -140,6 +156,7 @@ function App() {
             isFutureLaunch={false}
             showSuccesses={filterShowSuccessful}
             showFailures={filterShowFailed}
+            startDate={filterStartDate}
           />
         )}
         {!filterShowFuture && !filterShowPast && (
