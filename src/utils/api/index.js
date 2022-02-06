@@ -4,11 +4,18 @@ import axios from "axios";
 const SPACEX_API_URL = "https://api.spacexdata.com/v4";
 
 // Get data from SpaceX's API
-const fetchData = (dataType, params) => {
-  return axios(`${SPACEX_API_URL}/${dataType}/query`, { 
+const fetchDataPOST = (dataType, params) => {
+  return axios(`${SPACEX_API_URL}/${dataType}/query`, {
     method: 'POST',
     data: params
   })
 };
 
-export { fetchData };
+// Get future launches
+const getFutureLaunches = () => {
+  return axios(`${SPACEX_API_URL}/launches/upcoming`, {
+    method: 'GET'
+  })
+};
+
+export { fetchDataPOST, getFutureLaunches };

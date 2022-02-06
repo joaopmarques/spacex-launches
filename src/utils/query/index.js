@@ -1,28 +1,38 @@
 const futureLaunchesQuery = {
   query: {
-    date_utc: {
-      $gte: new Date(new Date().setFullYear(new Date().getFullYear())),
-      $lte: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-    }
+    upcoming: true
   },
   options: {
     sort: {
-      mission_number: 'desc'
+      mission_number: 'asc'
     },
-    limit: 10,
+    limit: 2,
+    select: {
+      flight_number: 1,
+      name: 1,
+      date_utc: 1,
+      date_precision: 1,
+      upcoming: 1,
+      links: 1,
+      success: 1,
+    },
     populate: "rocket"
   }
 };
 
 const pastLaunchesQuery = {
   query: {
-    past: true
+    past: true,
+    date_utc: {
+      $gte: new Date(new Date().setFullYear(new Date().getFullYear() -1)),
+      $lte: new Date()
+    }
   },
   options: {
     sort: {
       flight_number: 'desc'
     },
-    limit: 10,
+    limit: 2,
     populate: "rocket"
   }
 };
