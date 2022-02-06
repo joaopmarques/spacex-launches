@@ -18,20 +18,40 @@ const UpcomingLaunches = () => {
       })
   }, []);
 
+  // Return an empty list if there's no launches
   if (!upcomingLaunches) {
-    return <div className="loader">No upcoming launches.</div>
+    return (
+      <section className="upcoming">
+        <p>No upcoming launches.</p>
+      </section>
+    );
+  }
+
+  // Date formatting helper
+  const formatDate = (date) => {
+    const tempDate = new Date(date);
+    return `${tempDate.getDay()}/${tempDate.getMonth() + 1}/${tempDate.getFullYear()}`;
   }
 
   return (
     <section className="upcoming">
       <h2>Upcoming Launches</h2>
-      <ul>
-        {upcomingLaunches.map((launch, idx) => (
-          <li>
-            {launch.name}
-          </li>
+      <div className="grid">
+        {upcomingLaunches.map((mission, idx) => (
+          <article>
+            <header>
+              {mission.links.patch.small && (
+                <img src={mission.links.patch.small} alt={`${mission.name} mission patch`} />
+              )}
+              <h3>{mission.name}</h3>
+              <p>{mission.flight_number}</p>
+            </header>
+            <p><strong>Launch date</strong>{formatDate(mission.date_utc)}</p>
+            <p><strong>Status</strong>Not launched</p>
+            <p><strong>[TODO] Rocket</strong>{mission.rocket}</p>
+          </article>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
