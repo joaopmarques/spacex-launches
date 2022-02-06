@@ -1,46 +1,57 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Launches from "./components/Launches";
+import LaunchFilter from "./components/LaunchFilter";
+import InfoVisibility from "./components/InfoVisibility";
 
 // Import utilities
-import * as styles from "./utils/defaultStyles";
 import * as query from "./utils/query";
+import * as styles from "./utils/defaultStyles";
 
 function App() {
 
   // State management
-  const [infoVisibility, setInfoVisibility] = useState(true);
   const [scrollNoticeVisibility, setScrollNoticeVisibility] = useState(true);
   const [launchCap, setLaunchCap] = useState(4);
 
   // Set a ref to this container
   const sectionRef = useRef();
 
-  // Scrolling detection logic
-  const handleScroll = () => {
-    // Stop making requests if the limit has changed
-    if (launchCap < query.QUERY_LIMIT) {
-      if (sectionRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = sectionRef.current;
-        if (scrollHeight - scrollTop === clientHeight) {
-          setLaunchCap(launchCap + 2);
-          setTimeout(() => setScrollNoticeVisibility(false), 3000);
+  // Deal with side effects
+  useEffect(() => {
+    // Assign ref to constant to prevent cleanup mishaps
+    const curRef = sectionRef.current;
+
+    // Scrolling detection logic
+    const handleScroll = () => {
+      // Stop making requests if the limit has changed
+      if (launchCap < query.QUERY_LIMIT) {
+        if (curRef) {
+          const { scrollTop, scrollHeight, clientHeight } = curRef;
+          if (scrollHeight - scrollTop === clientHeight) {
+            setLaunchCap(launchCap + 2);
+            setTimeout(() => setScrollNoticeVisibility(false), 3000);
+          }
         }
       }
     }
-  }
 
-  // Deal with side effects
-  useEffect(() => {
-    sectionRef.current.addEventListener('scroll', handleScroll);
+    curRef.addEventListener('scroll', handleScroll);
     return () => {
-      sectionRef.current.removeEventListener('scroll', handleScroll)
+      curRef.removeEventListener('scroll', handleScroll)
     };
   }, [launchCap]);
 
-  // Toggle visibility (not that it matters a lot in this case)
-  const handleInfoVisibility = () => {
-    setInfoVisibility(!infoVisibility);
+  const [filterShowFuture, setFilterShowFuture] = useState(true);
+  const [filterShowPast, setFilterShowPast] = useState(true);
+
+  const handleFilter = (timePeriod) => {
+    if (timePeriod === 'future') {
+      setFilterShowFuture(!filterShowFuture);
+    }
+    if (timePeriod === 'past') {
+      setFilterShowPast(!filterShowPast);
+    }
   };
 
   return (
@@ -52,23 +63,52 @@ function App() {
         </div>
       </header>
 
-      <div className="container mx-auto">
-        {infoVisibility && (
-          <section className="bg-sky-50 border-b border-sky-200 p-5 relative">
-            <p className="text-sky-900">
-              <strong className="mb-2 text-lg block">What's this?</strong>
-              This is a simple way to check if your flight to Mars is currently on schedule.<br></br>
-              Powered by the <a className={styles.links} href="https://github.com/r-spacex/SpaceX-API" target="_blank">r/SpaceX API</a>. Not affiliated in any way with SpaceX.<br></br>
-              <strong className="pt-5 block">Check out my work:</strong> <a className={styles.links} href="https://github.com/joaopmarques/" target="_blank">@joaopmarques</a>
-            </p>
-            <button className="absolute block right-5 top-5 text-sky-700 font-bold text-sm hover:text-sky-800 active:text-sky-900" onClick={handleInfoVisibility}>⬆️ Hide</button>
-          </section>
-        )}
+      <InfoVisibility />
+
+      <div className="w-screen flex flex-nowrap p-5 bg-sky-100 border-b border-sky-200">
+        <div className="container mx-auto">
+          <p className="block mb-2 text-md mr-5 font-bold text-sky-700">Filters</p>
+          <div className="flex flex-row align-baseline">
+            <span className="text-sm mr-5 text-sky-700">⏳Timeframe</span>
+            <div className="flex overflow-hidden rounded-full">
+              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
+              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+            </div>
+          </div>
+          <div className="flex flex-row align-baseline">
+            <span className="text-sm mr-5 text-sky-700">⏳Time Period</span>
+            <div className="flex overflow-hidden rounded-full">
+              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
+              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+            </div>
+          </div>
+          <div className="flex flex-row align-baseline">
+            <span className="text-sm mr-5 text-sky-700">⏳Time Period</span>
+            <div className="flex overflow-hidden rounded-full">
+              <LaunchFilter filterShowTimePeriod={filterShowPast} handleFilter={handleFilter} timeExp={'past'} />
+              <LaunchFilter className="border-l border-sky-600" filterShowTimePeriod={filterShowFuture} handleFilter={handleFilter} timeExp={'future'} />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div ref={sectionRef} className="h-100 overflow-x-hidden overflow-scroll container bg-slate-100 mx-auto mb-auto flex flex-col md:flex-row flex-auto flex-grow">
-        <Launches launchCap={launchCap} isFutureLaunch={true} />
-        <Launches launchCap={launchCap} isFutureLaunch={false} />
+        {filterShowFuture && (
+          <Launches launchCap={launchCap} isFutureLaunch={true} />
+        )}
+        {filterShowPast && (
+          <Launches launchCap={launchCap} isFutureLaunch={false} />
+        )}
+        {!filterShowFuture && !filterShowPast && (
+          <div className="block grow p-10">
+            <p className="text-md text-center text-slate-700">
+              🤷🤷‍♂️🤷‍♀️<br></br>
+              What is the present? A thin interval between past and future?<br></br>
+              A moment of introspection and inner peace?<br></br>
+              <strong className="mt-2 block">Please choose a broader timeframe...</strong>
+            </p>
+          </div>
+        )}
       </div>
 
       {scrollNoticeVisibility && (

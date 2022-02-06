@@ -44,7 +44,7 @@ const Launches = (props) => {
         <div className="">
           {launches.data.docs.map((mission, idx) => (
             idx < props.launchCap && (
-              <LaunchArticle mission={mission} isFutureLaunch={props.isFutureLaunch} />
+              <LaunchArticle key={mission.name} mission={mission} isFutureLaunch={props.isFutureLaunch} />
             )
           ))}
         </div>
