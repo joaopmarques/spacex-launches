@@ -10,6 +10,7 @@ function App() {
 
   // State management
   const [infoVisibility, setInfoVisibility] = useState(true);
+  const [scrollNoticeVisibility, setScrollNoticeVisibility] = useState(true);
   const [launchCap, setLaunchCap] = useState(4);
 
   // Set a ref to this container
@@ -23,6 +24,7 @@ function App() {
         const { scrollTop, scrollHeight, clientHeight } = sectionRef.current;
         if (scrollHeight - scrollTop === clientHeight) {
           setLaunchCap(launchCap + 2);
+          setTimeout(() => setScrollNoticeVisibility(false), 3000);
         }
       }
     }
@@ -69,9 +71,11 @@ function App() {
         <Launches launchCap={launchCap} future={false} />
       </div>
 
-      <aside className="fixed shadow-2xl z-20 bottom-10 left-0 block py-4 px-20 rounded-tr-3xl rounded-br-3xl text-sm font-bold text-slate-200 bg-slate-800">
-        ⬇️ Scroll down to check more launches!
-      </aside>
+      {scrollNoticeVisibility && (
+        <aside className="fixed shadow-2xl z-20 bottom-10 left-0 block py-4 px-20 rounded-tr-3xl rounded-br-3xl text-sm font-bold text-slate-200 bg-slate-800">
+          ⬇️ Scroll down to check more launches!
+        </aside>
+      )}
 
     </main>
   );

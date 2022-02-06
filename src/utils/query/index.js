@@ -1,4 +1,5 @@
-const QUERY_LIMIT = 50;
+// This is a hard cap just to avoid getting more than we really need
+const QUERY_LIMIT = 100;
 
 const futureLaunchesQuery = {
   query: {
