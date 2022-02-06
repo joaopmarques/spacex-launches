@@ -4,9 +4,10 @@ const futureLaunchesQuery = {
   },
   options: {
     sort: {
-      mission_number: 'asc'
+      flight_number: 'asc'
     },
     limit: 2,
+    offset: 1,
     select: {
       flight_number: 1,
       name: 1,

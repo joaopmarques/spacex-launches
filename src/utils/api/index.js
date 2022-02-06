@@ -11,11 +11,4 @@ const fetchDataPOST = (dataType, params) => {
   })
 };
 
-// Get future launches
-const getFutureLaunches = () => {
-  return axios(`${SPACEX_API_URL}/launches/upcoming`, {
-    method: 'GET'
-  })
-};
-
-export { fetchDataPOST, getFutureLaunches };
+export { fetchDataPOST };
