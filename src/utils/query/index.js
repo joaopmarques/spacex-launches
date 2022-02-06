@@ -1,12 +1,15 @@
 const futureLaunchesQuery = {
   query: {
-    upcoming: true
+    date_utc: {
+      $gte: new Date(new Date().setFullYear(new Date().getFullYear())),
+      $lte: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+    }
   },
   options: {
     sort: {
-      flight_number: 'asc'
+      mission_number: 'desc'
     },
-    limit: 2,
+    limit: 10,
     populate: "rocket"
   }
 };
@@ -19,7 +22,7 @@ const pastLaunchesQuery = {
     sort: {
       flight_number: 'desc'
     },
-    limit: 2,
+    limit: 10,
     populate: "rocket"
   }
 };

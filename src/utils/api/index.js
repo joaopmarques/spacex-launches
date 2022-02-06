@@ -11,4 +11,4 @@ const fetchData = (dataType, params) => {
   })
 };
 
-export default fetchData;
+export { fetchData };

@@ -1,27 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 // Import utilities & data getter
-import { formatDate } from '../../utils/formatDate';
-import fetchData from '../../utils/fetchData';
-import * as queries from "../../utils/queries";
+import * as util from '../../utils/util';
+import * as api from '../../utils/api';
+import * as query from "../../utils/query";
 
 const UpcomingLaunches = () => {
 
   const [upcomingLaunches, setUpcomingLaunches] = useState();
-  const [pastLaunches, setPastLaunches] = useState();
 
   useEffect(() => {
     // Set future launches
-    fetchData('launches', queries.futureLaunchesQuery)
+    api.fetchData('launches', query.futureLaunchesQuery)
       .then(response => {
         setUpcomingLaunches(response);
-      })
-      .catch(error => console.error(error));
-
-    // Set past launches
-    fetchData('launches', queries.pastLaunchesQuery)
-      .then(response => {
-        setPastLaunches(response);
       })
       .catch(error => console.error(error));
   }, []);
@@ -47,7 +39,7 @@ const UpcomingLaunches = () => {
                 <h3>{mission.name}</h3>
                 <p>{mission.flight_number}</p>
               </header>
-              <p><strong>Launch date</strong>{formatDate(mission.date_utc)} (UTC)</p>
+              <p><strong>Launch date</strong>{util.formatDate(mission.date_utc)} (UTC)</p>
               <p><strong>Status</strong>Not launched</p>
               <p><strong>Rocket</strong>{mission.rocket.name}</p>
             </article>
