@@ -16,7 +16,7 @@ function App() {
   const [filterShowPast, setFilterShowPast] = useState(true);
   const [filterShowSuccessful, setFilterShowSuccessful] = useState(true);
   const [filterShowFailed, setFilterShowFailed] = useState(true);
-  const [filterStartDate, setFilterStartDate] = useState(new Date());
+  const [filterStartDate, setFilterStartDate] = useState();
 
   // Set a ref to this container
   const sectionRef = useRef();
@@ -56,7 +56,7 @@ function App() {
       curSectionRef.removeEventListener('scroll', handleScroll)
       curDatepickerRef.addEventListener('change', handleClick);
     };
-  }, [launchCap]);
+  }, [launchCap, filterStartDate]);
 
   // Handle filter button input logic
   const handleFilter = (expToEval) => {
@@ -148,6 +148,7 @@ function App() {
             isFutureLaunch={true}
             showSuccesses={filterShowSuccessful}
             showFailures={filterShowFailed}
+            startDate={filterStartDate}
           />
         )}
         {filterShowPast && (

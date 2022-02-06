@@ -28,7 +28,9 @@ const futureLaunchesQuery = (startDate) => {
         links: 1,
         success: 1,
       },
-      populate: "rocket"
+      populate: [
+        "rocket", "launchpad"
+      ]
     }
   };
 };
@@ -56,7 +58,9 @@ const pastLaunchesQuery = (startDate) => {
         flight_number: pastLookupSort
       },
       limit: QUERY_LIMIT,
-      populate: "rocket"
+      populate: [
+        "rocket", "launchpad"
+      ]
     }
   };
 };
