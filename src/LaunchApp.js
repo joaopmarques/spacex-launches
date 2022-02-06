@@ -1,11 +1,11 @@
 import React from "react";
 
-import UpcomingLaunches from "./components/UpcomingLaunches";
+import Launches from "./components/Launches";
 
 function App() {
   return (
     <div className="LaunchApp">
-      <UpcomingLaunches />
+      <Launches />
     </div>
   );
 }
