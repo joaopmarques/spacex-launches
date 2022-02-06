@@ -1,3 +1,5 @@
+const QUERY_LIMIT = 50;
+
 const futureLaunchesQuery = {
   query: {
     upcoming: true
@@ -6,7 +8,7 @@ const futureLaunchesQuery = {
     sort: {
       flight_number: 'asc'
     },
-    limit: 2,
+    limit: QUERY_LIMIT,
     offset: 1,
     select: {
       flight_number: 1,
@@ -25,7 +27,7 @@ const pastLaunchesQuery = {
   query: {
     past: true,
     date_utc: {
-      $gte: new Date(new Date().setFullYear(new Date().getFullYear() -1)),
+      $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       $lte: new Date()
     }
   },
@@ -33,9 +35,9 @@ const pastLaunchesQuery = {
     sort: {
       flight_number: 'desc'
     },
-    limit: 2,
+    limit: QUERY_LIMIT,
     populate: "rocket"
   }
 };
 
-export { futureLaunchesQuery, pastLaunchesQuery };
+export { futureLaunchesQuery, pastLaunchesQuery, QUERY_LIMIT };

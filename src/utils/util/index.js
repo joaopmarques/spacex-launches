@@ -3,7 +3,7 @@ const getFormattedDate = (date, precision) => {
   const tempDate = new Date(date);
 
   if (precision === 'month') {
-    return `${("0" + (tempDate.getMonth() + 1)).slice(-2)}/${tempDate.getFullYear()}`;
+    return `${tempDate.getMonth() + 1}/${tempDate.getFullYear()}`;
   }
 
   if (precision === "quarter" ||
@@ -13,7 +13,7 @@ const getFormattedDate = (date, precision) => {
     return tempDate.getFullYear();
   }
 
-  return `${("0" + tempDate.getDay()).slice(-2)}/${("0" + (tempDate.getMonth() + 1)).slice(-2)}/${tempDate.getFullYear()}`;
+  return `${tempDate.getDay() + 1}/${tempDate.getMonth() + 1}/${tempDate.getFullYear()}`;
 }
 
 export { getFormattedDate };
