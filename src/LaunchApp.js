@@ -46,7 +46,7 @@ function App() {
   return (
     <main className="flex flex-col h-screen overflow-hidden bg-slate-300">
 
-      <header className="py-10 px-5 bg-gradient-to-r from-purple-700 to-sky-700 border-b-4 border-yellow-500 shadow-lg z-10">
+      <header className="py-10 px-5 bg-gradient-to-r from-indigo-700 to-sky-600 border-b-4 border-yellow-500 shadow-lg z-10">
         <div className="container mx-auto">
           <h1 className="text-slate-200 sm:text-3xl lg:text-4xl">🛰️ SpaceX Launch Status Mission Control</h1>
         </div>
@@ -54,7 +54,7 @@ function App() {
 
       <div className="container mx-auto">
         {infoVisibility && (
-          <section className="bg-sky-50 border-b border-sky-200 py-10 px-5 relative">
+          <section className="bg-sky-50 border-b border-sky-200 p-5 relative">
             <p className="text-sky-900">
               <strong className="mb-2 text-lg block">What's this?</strong>
               This is a simple way to check if your flight to Mars is currently on schedule.<br></br>
@@ -67,8 +67,8 @@ function App() {
       </div>
 
       <div ref={sectionRef} className="h-100 overflow-x-hidden overflow-scroll container bg-slate-100 mx-auto mb-auto flex flex-col md:flex-row flex-auto flex-grow">
-        <Launches launchCap={launchCap} future={true} />
-        <Launches launchCap={launchCap} future={false} />
+        <Launches launchCap={launchCap} isFutureLaunch={true} />
+        <Launches launchCap={launchCap} isFutureLaunch={false} />
       </div>
 
       {scrollNoticeVisibility && (

@@ -19,7 +19,7 @@ const LaunchArticle = (props) => {
         </div>
       </header>
       <div className={styles.inlineItem}><strong>Launch date</strong>{util.getFormattedDate(mission.date_utc, mission.date_precision)}</div>
-      {!props.future &&
+      {!props.isFutureLaunch &&
         <div className={styles.inlineItem}><strong>Mission status</strong>{mission.success ? (
           <span className={`!bg-emerald-200 !text-emerald-600 ${styles.label}`}>✅ Successful</span>
         ) : (
