@@ -27,10 +27,10 @@ const Launches = (props) => {
       .catch(error => console.error(error));
   }, []);
 
-  // If there's launch info, display it
   if (launches) {
+    // If there's launch info, display it
     return (
-      <section className={`basis-full flex flex-col p-5 ${!props.future && 'bg-slate-200'}`}>
+      <section className={`basis-full flex flex-col p-5 ${!props.future && 'bg-slate-200 border-l border-slate-300'}`}>
         <h2 className="p-3 text-lg font-bold bg-slate-50 rounded-md shadow-md">
           {props.future ? '🧑‍🚀 Upcoming launches' : '🚀 Past launches'}
         </h2>
@@ -60,9 +60,10 @@ const Launches = (props) => {
       </section>
     );
   } else {
+    // If not, display a message
     return (
       <section className={`basis-1/2 flex flex-col p-5 ${!props.future && 'bg-slate-100'}`}>
-        <p>No launches to display currently.</p>
+        <p>🏜️ No launches to display currently.</p>
       </section>
     );
   }
